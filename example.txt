@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(name: 'MUHIT', choices: ['development', 'staging', 'production'], description: 'Deploy muhiti')
+        string(name: 'VERSIYA', defaultValue: 'v1.0.0', description: 'Versiya')
+        booleanParam(name: 'TESTLAR', defaultValue: true, description: 'Testlar yurgizilsinmi?')
+    }
+
+    environment {
+        LOYIHA = 'kassir-app'
+    }
+
+    stages {
+        stage('Malumotlar') {
+            steps {
+                echo "Loyiha: ${env.LOYIHA}"
+                echo "Muhit: ${params.MUHIT}"
+                echo "Versiya: ${params.VERSIYA}"
+            }
+        }
+
+        stage('Test') {
+            when {
+                expression { params.TESTLAR == true }
+            }
+            steps {
+                echo 'Testlar tekshirilmoqda...'
+                sh 'echo "Testlar 100% muvaffaqiyatli!"'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Versiya ${params.VERSIYA} ${params.MUHIT} serveriga yuklandi!"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Konveyer tugadi.'
+        }
+    }
+}
