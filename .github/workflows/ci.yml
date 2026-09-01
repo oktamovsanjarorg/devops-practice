@@ -40,11 +40,11 @@ jobs:
           docker --version
           echo "obraz muvaffaqiyatli yigildi"
 
-       - name: dockerhubga login qilish 
-         uses: docker/login-actions@v3
-         with:
-           username: ${{ secrets.DOCKERHUB_USERNAME }}
-           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: dockerhubga login qilish 
+          uses: docker/login-actions@v3
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: dockerhubga push qilish va yigish
         uses: docker/build-push-actions@v5
