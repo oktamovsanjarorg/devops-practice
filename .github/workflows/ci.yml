@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: pythonni urnatish
-        uses: action/setup-python@v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -26,25 +26,25 @@ jobs:
           python3 -c "assert 2 + 2 == 4"
           echo "barcha testlar muvaffaqiyatli utdi"
 
-qurilish:
-  name: 2. docker obrazini yig'ish
-  needs: testlash
-  runs-on: ubuntu-latest
-  steps:
-    - name: kodni yuklab olish
-      uses: action/checkout@v4
+  qurilish:
+    name: 2. docker obrazini yig'ish
+    needs: testlash
+    runs-on: ubuntu-latest
+    steps:
+      - name: kodni yuklab olish
+        uses: actions/checkout@v4
 
-    - name: docker versiyasini tekshirish
-      run: |
-        echo "docker muhiti tayyorlanmoqda "
-        docker --version
-        echo "obraz muvaffaqiyatli yigildi"
+      - name: docker versiyasini tekshirish
+        run: |
+          echo "docker muhiti tayyorlanmoqda "
+          docker --version
+          echo "obraz muvaffaqiyatli yigildi"
 
-deploy:
-  name: 3. serverga joylash (deploy)
-  needs: qurilish
-  runs-on: ubuntu-latest
-  steps:
-    - name: productionga chiqarish
-      run: |
-        echo "dastur production serveriga muvaffaqiyatli yuklandi"
+  deploy:
+    name: 3. serverga joylash (deploy)
+    needs: qurilish
+    runs-on: ubuntu-latest
+    steps:
+      - name: productionga chiqarish
+        run: |
+          echo "dastur production serveriga muvaffaqiyatli yuklandi"
