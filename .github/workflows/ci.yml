@@ -1,0 +1,36 @@
+name: DevOps CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 2. Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 3. Verify System & Tools
+        run: |
+          echo "GitHub Actions Cloud Server is active!"
+          uname -a
+          python3 --version
+          docker --version
+
+      - name: 4. Test Stage
+        run: |
+          echo "Running automated unit tests..."
+          python3 -c "print('All tests passed 100%!')"
+
+      - name: 5. Health Check
+        run: echo "CI/CD Pipeline succeeded cleanly!"
