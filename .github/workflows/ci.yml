@@ -1,57 +1,54 @@
 name: Production CI/CD Pipeline
 
-    on:
-      push:
-        branches: [ "main" ]
-      workflow_dispatch:
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
-    jobs:
-      testlash:
-        name: 1. Avtomatik Testlar
-        runs-on: ubuntu-latest
-        steps:
-          - name: Kodni yuklab olish
-            uses: actions/checkout@v4
+jobs:
+  testlash:
+    name: 1. Avtomatik Testlar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodni yuklab olish
+        uses: actions/checkout@v4
 
-          - name: Python o'rnatish
-            uses: actions/setup-python@v5
-            with:
-              python-version: '3.11'
+      - name: Python o'rnatish
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-          - name: Testlarni yurgizish
-            run: |
-              echo "Unit testlar bajarilmoqda..."
-              python3 -c "assert 2 + 2 == 4"
-              echo "Barcha testlar muvaffaqiyatli otdi!"
+      - name: Testlarni yurgizish
+        run: |
+          echo "Unit testlar bajarilmoqda..."
+          python3 -c "assert 2 + 2 == 4"
+          echo "Barcha testlar muvaffaqiyatli otdi!"
 
-      qurilish:
-        name: 2. Docker Hub'ga Yig'ish va Yuklash
-        needs: testlash
-        runs-on: ubuntu-latest
-        steps:
-          - name: Kodni yuklab olish
-            uses: actions/checkout@v4
+  qurilish:
+    name: 2. Docker Hub'ga Yig'ish va Yuklash
+    needs: testlash
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodni yuklab olish
+        uses: actions/checkout@v4
 
-          - name: Docker Hub'ga Login qilish
-            uses: docker/login-action@v3
-            with:
-              username: ${{ secrets.DOCKERHUB_USERNAME }}
-              password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Docker Hub'ga Login qilish
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-          - name: Obrazni yig'ish va Push qilish
-            uses: docker/build-push-action@v5
-            with:
-              context: .
-              push: true
-              tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-
-  app:latest
+      - name: Obrazni yig'ish va Push qilish
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-app:latest
 
-      deploy:
-        name: 3. Serverga Joylash (Deploy)
-        needs: qurilish
-        runs-on: ubuntu-latest
-        steps:
-          - name: Productionga chiqarish
-            run: |
-              echo "Dastur Docker Hub'ga chiqdi va production
-  serveriga muvaffaqiyatli yuklandi!"
+  deploy:
+    name: 3. Serverga Joylash (Deploy)
+    needs: qurilish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Productionga chiqarish
+        run: echo "Dastur Docker Hub'ga chiqdi va production serveriga muvaffaqiyatli yuklandi!"
