@@ -27,7 +27,7 @@ jobs:
           echo "barcha testlar muvaffaqiyatli utdi"
 
   qurilish:
-    name: 2. docker obrazini yig'ish
+    name: 2. docker obrazini yig'ish va dockerhubga yuklash
     needs: testlash
     runs-on: ubuntu-latest
     steps:
@@ -39,6 +39,19 @@ jobs:
           echo "docker muhiti tayyorlanmoqda "
           docker --version
           echo "obraz muvaffaqiyatli yigildi"
+
+       - name: dockerhubga login qilish 
+         uses: docker/login-action@v3
+         with:
+           username: ${{ secrets.DOCKERHUB_USERNAME }}
+           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: dockerhubga push qilish va yigish
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/devops-app:latest
 
   deploy:
     name: 3. serverga joylash (deploy)
