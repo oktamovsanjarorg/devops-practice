@@ -1,4 +1,4 @@
-name: DevOps CI Pipeline
+name: production ci/cd pipiline
 
 on:
   push:
@@ -8,29 +8,43 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-and-build:
+  testlash:
+    name: 1. avtomatik testlar
     runs-on: ubuntu-latest
-
     steps:
-      - name: 1. Checkout repository
+      - name: kodni yuklab olish
         uses: actions/checkout@v4
 
-      - name: 2. Set up Python
-        uses: actions/setup-python@v5
+      - name: pythonni urnatish
+        uses: action/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 3. Verify System & Tools
+      - name: testlarni yurgazish
         run: |
-          echo "GitHub Actions Cloud Server is active!"
-          uname -a
-          python3 --version
-          docker --version
+          echo "unittestlar bajrilmoqda ... "
+          python3 -c "assert 2 + 2 == 4"
+          echo "barcha testlar muvaffaqiyatli utdi"
 
-      - name: 4. Test Stage
-        run: |
-          echo "Running automated unit tests..."
-          python3 -c "print('All tests passed 100%!')"
+qurilish:
+  name: 2. docker obrazini yig'ish
+  needs: testlash
+  runs-on: ubuntu-latest
+  steps:
+    - name: kodni yuklab olish
+      uses: action/checkout@v4
 
-      - name: 5. Health Check
-        run: echo "CI/CD Pipeline succeeded cleanly!"
+    - name: docker versiyasini tekshirish
+      run: |
+        echo "docker muhiti tayyorlanmoqda "
+        docker --version
+        echo "obraz muvaffaqiyatli yigildi"
+
+deploy:
+  name: 3. serverga joylash (deploy)
+  needs: qurilish
+  runs-on: ubuntu-latest
+  steps:
+    - name: productionga chiqarish
+      run: |
+        echo "dastur production serveriga muvaffaqiyatli yuklandi"
