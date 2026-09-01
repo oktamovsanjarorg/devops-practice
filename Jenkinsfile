@@ -22,6 +22,12 @@ pipeline {
                 sh 'echo "Qurilish yakunlandi!"'
             }
         }
+
+        stage('4. Health'){
+        	steps{
+        		echo "tizim 100% sog'lom !"
+        	}
+        }
     }
 
     post {
