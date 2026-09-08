@@ -18,11 +18,16 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Kutubxonalarni o'rnatish
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Testlarni yurgizish
         run: |
-          echo "Unit testlar bajarilmoqda..."
-          python3 -c "assert 2 + 2 == 4"
-          echo "Barcha testlar muvaffaqiyatli otdi!"
+          echo "Unit testlar pytest orqali bajarilmoqda..."
+          pytest tests/ -v
+          echo "Barcha testlar muvaffaqiyatli o'tdi!"
 
   qurilish:
     name: 2. Docker Hub'ga Yig'ish va Yuklash
